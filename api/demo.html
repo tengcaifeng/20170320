@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<form action="index.php" method="POST">
+
+    市内公交换乘策略：<select name="tactics_incity" id="tactics_incity">
+        <option value="0">推荐</option>先
+        <option value="1">少换乘</option>
+        <option value="2">少步行</option>
+        <option value="3">不坐地铁</option>
+        <option value="4">时间短</option>
+        <option value="5">地铁优先</option>
+    </select>
+<!--
+    跨城公交换乘策略： <select name="c2" id="tactics_intercity">
+        <option value="0">时间短</option>
+        <option value="1">出发早</option>
+        <option value="2">价格低</option>
+    </select>
+    
+    跨城交通方式策略：<select name="c3" id="trans_type_intercity">
+        <option value="0">火车优先</option>
+        <option value="1">飞机优先</option>
+        <option value="2">大巴优先</option>
+    </select>-->
+    <input type="submit" value="确定" name="submit">
+</form>
+</body>
+</html>
