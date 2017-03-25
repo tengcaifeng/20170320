@@ -1,0 +1,106 @@
+
+/*
+html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background: #ffa5a5;
+    background: linear-gradient(to bottom, #ffa5a5 0%,#ffd3d3 100%);
+}
+*/
+
+.chest {
+    width: 440px;
+    height: 440px;
+    position: absolute;
+    left:-20px;
+    bottom:0;
+
+}
+
+.heart {
+    position: absolute;
+    z-index: 2;
+    background: linear-gradient(-90deg, #F50A45 0%, #d5093c 40%);
+    animation: beat 0.7s ease 0s infinite normal;
+}
+
+.heart.center {
+    background: linear-gradient(-45deg, #B80734 0%, #d5093c 40%);
+}
+
+.heart.top {
+    z-index: 3;
+}
+
+.side {
+    top: 100px;
+    width: 160px;
+    height: 160px;
+    border-radius: 100%;
+}
+
+.center {
+    width: 160px;
+    height: 160px;
+    bottom: 110px;
+    border-radius: 10%;
+    left: 135px;
+    font-size: 0;
+    text-indent: -9999px;
+}
+
+.left {
+    left: 62px;
+}
+
+.right {
+    right: 62px;
+}
+
+
+@keyframes beat {
+    0% {
+        transform: scale(1) rotate(225deg);
+        box-shadow:0 0 40px #d5093c;
+    }
+
+    50% {
+        transform: scale(1.1) rotate(225deg);
+        box-shadow:0 0 70px #d5093c;
+    }
+
+    100% {
+        transform: scale(1) rotate(225deg);
+        box-shadow:0 0 40px #d5093c;
+    }
+}
+
+.foot .content li:nth-child(1) .wz{
+
+    z-index: 10000;
+    color: #cccccc;
+    font-size: 55px;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    text-align: center;
+    animation: love 0.7s ease 0s infinite normal;
+
+
+}
+
+@keyframes love {
+    0%{
+        transform: scale(1);
+    }
+    50%{
+        transform: scale(1.3);
+    }
+    100%{
+        transform: scale(1);
+    }
+}

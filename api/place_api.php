@@ -19,7 +19,6 @@ $data = $content['results'];
     <?php
         foreach ($data as $k => $v){
             echo "<li>";
-
             echo "酒店名字：".$v['name']."<br/>";
             echo "酒店地址：".$v['address']."<br/>";
             echo "酒店电话：".$v['telephone']."<br/>";

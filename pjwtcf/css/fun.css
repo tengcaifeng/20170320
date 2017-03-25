@@ -1,0 +1,219 @@
+*{margin:0;padding:0;}
+ul{list-style: none;}
+body{
+    height:100%;
+    overflow: hidden;
+    background: url("../image/bg.jpg") ;
+    -webkit-background-size:cover;
+    background-size:cover;
+}
+.stage{
+    position: absolute;
+    width: 100%;
+    height:100%;
+    display: flex;
+    flex-direction: column;
+}
+.top{
+    flex: 2;
+    perspective: 1000px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.foot{
+
+    flex: 1;
+}
+
+.top .scene{
+    width: 20%;
+    height: 40%;
+    transform-style: preserve-3D;/*子元素3D；*/
+    position: absolute;
+    top:0;
+    bottom:0px;
+    right:0;
+    left:0;
+    margin:auto;
+    -webkit-animation:slide 18s linear infinite;
+    animation:slide 18s linear infinite;
+    transform-origin:center center;/* 设置旋转的中心点*/
+
+
+
+}
+.top .scene ul li{
+    list-style:none;
+    width:90%;
+    height:90%;
+    border:5px solid #FE98D9;
+    position:absolute;
+
+}
+.top .scene img{
+    width: 100%;
+    height: 100%;
+}
+
+.top .scene ul li:nth-child(1){
+
+    transform: rotateY(0deg) translateZ(260px);
+}
+.top .scene ul li:nth-child(2){
+
+    transform: rotateY(60deg) translateZ(260px);
+}
+.top .scene ul li:nth-child(3){
+
+    transform: rotateY(120deg) translateZ(260px);
+}
+.top .scene ul li:nth-child(4){
+
+    transform: rotateY(180deg) translateZ(260px);
+}
+.top .scene ul li:nth-child(5){
+
+    transform: rotateY(240deg) translateZ(260px);
+}
+.top .scene ul li:nth-child(6){
+
+    transform: rotateY(300deg) translateZ(260px);
+}
+
+/*CSS3动画开始*/
+@-webkit-keyframes  slide{
+    from{transform:rotateY(0deg);
+    }
+    to{transform:rotateY(360deg);
+    }
+}
+@keyframes  slide{
+    from{transform:rotateY(0deg);
+    }
+    to{transform:rotateY(360deg);
+    }
+}
+.top .scene:hover{
+    -webkit-animation-play-state:paused;
+    animation-play-state:paused;
+}
+.top .scene li:hover img{
+    transform:scale(1.9);
+    border:5px solid rgba(255,255,255,0.5)
+}
+.xin{
+    position:fixed;
+    bottom:50px;
+    left:60px;
+    opacity:0;
+    -webkit-animation:xin 8s linear infinite;
+    animation:xin 8s linear infinite;
+}
+@-webkit-keyframes xin{
+    0%{opacity:1;}/*从什么时候开始*/
+    20%{bottom:300px; left:300px;opacity:0;}
+    40%{bottom:460px; left:680px;opacity:1;}
+    60%{bottom:300px; left:900px;opacity:0;}
+    80%{bottom:50px; left:1100px;opacity:1;}
+    100%{bottom:-150px; left:760px;opacity:0;}
+}
+@keyframes xin{
+      0%{opacity:1;}/*从什么时候开始*/
+      20%{bottom:300px; left:300px;opacity:0;}
+      40%{bottom:460px; left:680px;opacity:1;}
+      60%{bottom:300px; left:900px;opacity:0;}
+      80%{bottom:50px; left:1100px;opacity:1;}
+      100%{bottom:-150px; left:760px;opacity:0;}
+  }
+
+audio{display:none;}
+
+.foot{
+    position: relative;
+}
+.foot .content{
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin:auto;
+    width: 90%;
+    height: 90%;
+  /*  border:1px solid purple;*/
+    display: flex;
+}
+.foot .content li{
+    font-size: 26px;
+    font-family: 楷体;
+    color: #fff;
+    float: left;
+    margin-right:30px;
+    margin-left: 30px;
+    width: 28px;
+    height:0px;
+    overflow: hidden;
+    white-space: pre-wrap;
+
+
+}
+.foot .content li:nth-child(8){
+
+    position: absolute;
+    right:10px;
+    animation:wenzi 4s linear 5s forwards;
+}
+.foot .content li:nth-child(7){
+    position: absolute;
+    right:60px;
+    animation:wenzi 5s linear 8s forwards;
+}
+.foot .content li:nth-child(6){
+    position: absolute;
+    right:110px;
+    animation:wenzi 5s linear 13s forwards;
+}
+.foot .content li:nth-child(5){
+    position: absolute;
+    right:160px;
+    animation:wenzi 3s linear 17.5s forwards;
+}
+.foot .content li:nth-child(4){
+    position: absolute;
+    right:210px;
+    animation:wenzi 5s linear 20s forwards;
+}
+.foot .content li:nth-child(3){ 
+    position: absolute;
+    top:20px;
+    right:300px;
+    animation:wenzi 5s linear 24.5s forwards;
+}
+.foot .content li:nth-child(2){
+    position: absolute;
+    top: 20px;
+    right:350px;
+    animation:wenzi 5s linear 29s forwards;
+}
+.foot .content li:nth-child(1){
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    animation:heart 1s 32s forwards;
+}
+
+
+@keyframes wenzi {
+    from{  height: 0%;  }
+    to{  height: 100%; }
+}
+
+@keyframes heart {
+    from{opacity: 0}
+    to{
+        opacity:1;}
+}
+
