@@ -4,51 +4,49 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
-    <meta name="description" content="百度地图地点搜索和鼠标点击地点获取经纬度，这些都是地图比较基本和实用的代码，其中还包括了根据用户IP进行地图的显示、改变地图上的鼠标样式、启用滚轮缩放" />
-    <meta name="keywords" content="百度地图,地点搜索,获取经纬度,改变地图鼠标样式,启用滚轮缩放" />
-    <title>百度地图API地点搜索-获取经纬度DEMO</title>
-
+    <title>地图搜索功能测试</title>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Lim3MZ2qFNRKoNhgjXMQdEQLXOGwdH2G"></script>
-
     <style type="text/css">
         *{ font-family: "微软雅黑";}
-        #where,#lonlat,#lonlat2{ width:300px; height:30px; font-size:24px; color:blue;}
+        body {  height: 100%;  margin: 0px;  padding: 0px  }
+        #where,#lng,#lat{ width:300px; height:30px; font-size:24px; color:blue;}
         #but{ width:100px; height:36px; font-size:20px;}
-        #container{
-           margin:0 auto;width:100%;height:400px;border:2px solid gray; margin-bottom:20px;
-        }
+        #container{ margin:0 auto;width:100%;height:380px;border:2px solid gray; margin-bottom:20px;  }
+        .box{  text-align: center;  }
     </style>
 
 </head>
 
 <body>
-<div>
-    <h1>附近搜</h1><hr />
-    <form action="" method="post">
+<div class="box">
+    <!--<h1>附近搜</h1><hr />-->
+    <form action="place_api.php" method="post">
+        <div id="container"></div>
+        <!--经度：--><input id="lng" name="lng" type="hidden" maxlength="100" value="103.995542">
+        <!-- 纬度：--><input id="lat" name="lat" type="hidden" maxlength="100" value="30.591636">
         <h2>
-            <label >输入地点：</label>
-            <input id="where" name="where" type="text" placeholder="请输入地址">
-            <input id="but" type="button" value="地图查找" onClick="sear(document.getElementById('where').value);" />
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+           搜索： <select name="query" id="query" style="font-size: 18px;">
+                    <option value="酒店">酒店</option>
+                    <option value="厕所">厕所</option>
+                    <option value="饭店">饭店</option>
+                    <option value="公交">公交</option>
+                    <option value="学校">学校</option>
+                    <option value="医院">医院</option>
+                    <option value="电影院">电影院</option>
+                    <option value="银行">银行</option>
+                 </select>
+            <input type="submit" value="确定" style="font-size: 18px;">
         </h2>
 
     </form>
 
-    <form action="place_api.php" method="post">
-        <div id="container"></div>
-        经度：<input id="lonlat" name="lonlat" type="" maxlength="100" value="103.995542">
-        纬度：<input id="lonlat2" name="lonlat2" type="" maxlength="100" value="30.591636">
-        <select name="query" id="query">
-            <option value="酒店">酒店</option>
-            <option value="厕所">厕所</option>
-            <option value="饭店">饭店</option>
-            <option value="公交">公交</option>
-            <option value="学校">学校</option>
-            <option value="医院">医院</option>
-            <option value="电影院">电影院</option>
-            <option value="银行">银行</option>
-        </select>
-        <input type="submit" value="确定">
+    <form action="" method="post">
+        <h3>
+            <label >拖动<b style="color:#ff030c;">红色</b>标注到目的点或输入地点：</label>
+            <input id="where" name="where" type="text" placeholder="请输入地址">
+            <input id="but" type="button" value="地图查找" onClick="sear(document.getElementById('where').value);" />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        </h3>
     </form>
 </div>
 
@@ -63,7 +61,7 @@
 
     map.enableScrollWheelZoom();
     var point = new BMap.Point(103.995542,30.591636);/*经度，纬度*/
-    map.centerAndZoom(point, 14);
+    map.centerAndZoom(point, 13);
     var gc = new BMap.Geocoder();
 
     map.addControl(new BMap.NavigationControl());
@@ -71,14 +69,16 @@
     map.addControl(new BMap.ScaleControl());
     map.addControl(new BMap.MapTypeControl());
     map.addControl(new BMap.CopyrightControl());
+    var Geolocation = {anchor:BMAP_ANCHOR_BOTTOM_RIGHT,offset: new BMap.Size(0, 100)}; //定位功能距离地图的位置
+    map.addControl(new BMap.GeolocationControl(Geolocation));  //定位控件，针对移动端开发，默认位于地图左下方。
 
     var marker = new BMap.Marker(point);
     map.addOverlay(marker);
 
     marker.addEventListener("click", function(e)
     {
-        document.getElementById("lonlat").value = e.point.lng;/*经度*/
-        document.getElementById("lonlat2").value =e.point.lat;/*纬度*/
+        document.getElementById("lng").value = e.point.lng;/*经度*/
+        document.getElementById("lat").value =e.point.lat;/*纬度*/
 
     });
 
@@ -86,6 +86,8 @@
 
     marker.addEventListener("dragend",function(e)
     {
+        document.getElementById("lng").value = e.point.lng;/*纬度*/
+        document.getElementById("lat").value = e.point.lat;/*经度*/
         gc.getLocation(e.point, function(rs)
         {
             showLocationInfo(e.point, rs);
@@ -95,24 +97,16 @@
 
     map.addEventListener("click", function(e)
     {
-        document.getElementById("lonlat").value = e.point.lng;/*经度*/
-        document.getElementById("lonlat2").value = e.point.lat;/*纬度*/
-       /* gc.getLocation(e.point, function(rs)
-        {
-            showLocationInfo(e.point, rs);
-        });*/
+        document.getElementById("lng").value = e.point.lng;/*纬度*/
+        document.getElementById("lat").value = e.point.lat;/*经度*/
     });
 
-   /* map.addEventListener("click", function(e)
-    {
-        map.panTo(new BMap.Point(e.point.lng, e.point.lat));
-    });*/
     function showLocationInfo(pt, rs)
     {
-        var opts = {  width : 250, height: 150, title : "当前位置" } ;
+        var opts = {  width : 100, height: 72, title : "当前位置" } ;
         var addComp = rs.addressComponents;
-        var addr = "当前位置：" + addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber + "<br/>";
-        addr += "经度: " + pt.lng + ", " + "纬度：" + pt.lat;
+        var addr = addComp.province + " " + addComp.city + " " + addComp.district + "<br/> " + addComp.street + " " + addComp.streetNumber + "<br/>";
+      /*  addr += "经度: " + pt.lng + ", " + "纬度：" + pt.lat;*/
         var infoWindow = new BMap.InfoWindow(addr, opts);
         marker.openInfoWindow(infoWindow);
     }

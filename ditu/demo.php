@@ -62,8 +62,8 @@
 
     marker.addEventListener("click", function(e)
     {
-        document.getElementById("lonlat").value = e.point.lng;/*经度*/
-        document.getElementById("lonlat2").value =e.point.lat;/*纬度*/
+        document.getElementById("lonlat").value = e.point.lng;/*纬度*/
+        document.getElementById("lonlat2").value =e.point.lat;/*经度*/
 
     });
 
