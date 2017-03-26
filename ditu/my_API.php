@@ -18,17 +18,76 @@
             height: 80%;
             margin:0 auto;
         }
+#driving_way{
+    width: 33%;
+    float: left;
+}
+#gj_way{
+    width: 33%;
+    float: right;
+}
+#key_way{
+    width: 33%;
+    float: right;
+}
+        #r-result1,#r-result1 table{width:100%;font-size:12px;}
+        #r-result2,#r-result2 table{width:100%;font-size:12px;}
+        #r-result3,#r-result3 table{width:100%;font-size:12px;}
     </style>
     <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=Lim3MZ2qFNRKoNhgjXMQdEQLXOGwdH2G">
         //v2.0版本的引用方式：src="http://api.map.baidu.com/api?v=2.0&ak=您的密钥"
         //v1.4版本及以前版本的引用方式：src="http://api.map.baidu.com/api?v=1.4&key=您的密钥&callback=initialize"
     </script>
+    <script src="http://libs.baidu.com/jquery/1.9.0/jquery.js"></script>
 </head>
 
 <body>
+
 <div id="container"></div>
-经度：<input id="lng" name="lng" type="number" maxlength="10">
-纬度：<input id="lat" name="lat" type="number" maxlength="9">
+
+<hr>
+
+<!--驾车路线-->
+    <div id="driving_way">
+        <h3>驾车路线规划</h3>
+        起点：<input type="text" name="start1" id="start1" value="">
+        终点：<input type="text" name="end1" id="end1" value="">
+        <select>
+            <option value="0">最少时间</option>
+            <option value="1">最短距离</option>
+            <option value="2">避开高速</option>
+        </select>
+        <input type="button" id="result1" value="查询"/>
+    <div id="r-result1"></div>
+    </div>
+<!--驾车路线-->
+
+<!--公交查询-->
+    <div id="gj_way">
+        <h3>公交路线的展示页面</h3>
+        起点：<input type="text" name="start2" id="start2" value="">
+        终点：<input type="text" name="end2" id="end2" value="">
+        <input type="button" id="result2" value="查询">
+    <div id="r-result2"></div>
+    </div>
+<!--公交查询-->
+
+
+<!--关键词查询-->
+<div id="key_way">
+    <h3>关键词搜索</h3>
+    经度：<input id="lng" name="lng" type="number" maxlength="10">
+    纬度：<input id="lat" name="lat" type="number" maxlength="10"><br/>
+    拖动<b style="color:#ff030c;">红色</b>标注到查询地点or输入地点：<input style="width: 100%;" type="text" name="add" id="add" value=""><br/>
+    输入搜索内容: <input type="text" name="key" id="key" value="">
+    <input  type="button" id="result3" value="查询">
+    <div id="r-result3"></div>
+</div>
+<!--关键词查询-->
+
+</body>
+</html>
+
 <script type="text/javascript">
     var map = new BMap.Map("container");          // 创建地图实例
     var point = new BMap.Point(104.000285, 30.586164);/*经度，纬度*/ // 创建点坐标
@@ -57,16 +116,15 @@
     var Geolocation = {anchor:BMAP_ANCHOR_BOTTOM_RIGHT,offset: new BMap.Size(0, 100)}; //定位功能距离地图的位置
     map.addControl(new BMap.GeolocationControl(Geolocation));  //定位控件，针对移动端开发，默认位于地图左下方。
 
-
+    /*先点击获取经纬度*/
     map.addEventListener("click",function (e) {
         document.getElementById("lng").value = e.point.lng;/*经度*/
         document.getElementById("lat").value = e.point.lat;/*纬度*/
-       // var point = new BMap.Point(e.point.lng, e.point.lat);/*经度，纬度*/ // 创建点坐标
-       // var marker = new BMap.Marker(point);        // 创建标注
-       // map.addOverlay(marker);                     // 将标注添加到地图中
     })
+    /*先点击获取经纬度*/
 
 
+    /*拖动标注显示信息*/
     marker.enableDragging();        //容许拖动
     var gc = new BMap.Geocoder(); //地址解析实列化
     marker.addEventListener("dragend", function(e){
@@ -82,13 +140,14 @@
     {
         var opts = {  width : 100, height: 75, title : "当前位置" } ;
         var addComp = rs.addressComponents;
-        var addr = addComp.province + " " + addComp.city + " " + addComp.district + "<br/> " + addComp.street + " " + addComp.streetNumber + "<br/>";
+        var addr = addComp.province + "" + addComp.city + "" + addComp.district + "" + addComp.street + "" + addComp.streetNumber + "";
         /*  addr += "经度: " + pt.lng + ", " + "纬度：" + pt.lat;*/
         var infoWindow = new BMap.InfoWindow(addr, opts);
         //infoWindow.enableAutoPan();
         marker.openInfoWindow(infoWindow);
+        document.getElementById("add").value= addr;
     }
-
+    /*拖动标注显示信息*/
 
     // 复杂的自定义覆盖物
     function ComplexCustomOverlay(point, text, mouseoverText){
@@ -186,17 +245,47 @@
     map.addOverlay(myCompOverlay2);
     // 复杂的自定义覆盖物
 
-    /*
-        var local = new BMap.LocalSearch(map, {
-            renderOptions:{map: map}
-        });
-        local.search("酒店");
-    */
+    /*驾车路线查询*/
+    //三种驾车策略：最少时间，最短距离，避开高速
+    var routePolicy = [BMAP_DRIVING_POLICY_LEAST_TIME,BMAP_DRIVING_POLICY_LEAST_DISTANCE,BMAP_DRIVING_POLICY_AVOID_HIGHWAYS];
+    $("#result1").click(function(){
+        map.clearOverlays();
+        var i=$("#driving_way select").val();
+        var start1 = $("#driving_way #start1").val();
+        var end1 = $("#driving_way #end1").val();
+        search(start1,end1,routePolicy[i]);
+        function search(start1,end1,route){
+            var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true,panel: "r-result1"},policy: route});
+            driving.search(start1,end1);
+        }
+    });
+    /*驾车路线查询*/
 
-   /* map.addEventListener("click", function(e)
-    {
-        map.panTo(new BMap.Point(e.point.lng, e.point.lat));
-    });*/
+
+    /*公交路线查询的展示页面*/
+    var transit = new BMap.TransitRoute(map, {
+        renderOptions: {map: map, panel: "r-result2"}
+    });
+    $("#result2").click(function () {
+        map.clearOverlays();
+        var start2 = $("#start2").val();
+        var end2 = $("#end2").val();
+        transit.search(start2, end2);
+    })
+    /*公交路线查询的展示页面*/
+
+
+    /*关键词搜索*/
+    var local = new BMap.LocalSearch(map, {
+        renderOptions: {map: map, panel: "r-result3"}
+    });
+
+    $("#result3").click(function (e) {
+        map.clearOverlays();
+        var key = $("#key").val();
+        var add = $("#add").val();
+        //var point = new BMap.Point(e.point.lng,e.point.lat);/*经度，纬度*/ // 创建点坐标
+        local.searchNearby(key,add,2000);
+    })
+    /*关键词搜索*/
 </script>
-</body>
-</html>
